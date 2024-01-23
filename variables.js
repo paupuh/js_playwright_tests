@@ -1,15 +1,16 @@
-class TestData {
+class loginData {
 
-static baseURL= 'https://www.saucedemo.com/'
+static homeURL= 'https://www.saucedemo.com/'
 static pageURL= 'inventory.html'
-
 static usernameField= "#user-name"
 static passwordField= "#password"
 static loginData= "standard_user"
 static passwordData= "secret_sauce"
 static loginButton= "#login-button"
-
-static productSort= "product_sort_container"
 }
+export {loginData}
 
-export default TestData
+class buttonsData {
+    static productSort= "select.productproduct_sort_container "
+}
+export {buttonsData}

@@ -1,31 +1,28 @@
 const { test, expect } = require('@playwright/test');
-import TestData from '../variables.js';
+import { buttonsData, loginData } from '../variables.js';
 
 test('User is able open page', async ({page}) => {
-    await page.goto(TestData.baseURL);
+    await page.goto(loginData.homeURL);
     await expect(page).toHaveTitle(`Swag Labs`);
 
 })
 
 test('User logedin and on products page', async ({page}) => {
-    await page.goto(TestData.baseURL);
-    await page.locator(TestData.usernameField).click();
-    await page.locator(TestData.usernameField).fill(TestData.loginData);
-    await page.locator(TestData.passwordField).click();
-    await page.locator(TestData.passwordField).fill(TestData.passwordData);
-    await page.locator(TestData.loginButton).click();
-    const expectedURL = `${TestData.baseURL}${TestData.pageURL}`;
+    await page.goto(loginData.homeURL);
+    await page.locator(loginData.usernameField).click();
+    await page.locator(loginData.usernameField).fill(loginData.loginData);
+    await page.locator(loginData.passwordField).click();
+    await page.locator(loginData.passwordField).fill(loginData.passwordData);
+    await page.locator(loginData.loginButton).click();
+    const expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
     await expect(page).toHaveURL(expectedURL);
 });
 
+test('Product sort list unfolds', async ({page}) => {
+    await page.goto(loginData.homeURL);
+    await page.locator(buttonsData.productSort);
 
-
-// test('Product sort list unfolds', async ({page}) => {
-//     await page.goto(baseURL);
-//     await page.locator()
-// }
-
-
+});
 // test('get started link', async ({ page }) => {
 //   await page.goto('https://playwright.dev/');
 
