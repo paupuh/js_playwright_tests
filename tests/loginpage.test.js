@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-import TestData from /Users/paulinapuhlmann/js_playwright_tests/tests/variables.js
+import TestData from '../variables.js';
 
 test('User is able open page', async ({page}) => {
     await page.goto(TestData.baseURL);
@@ -10,9 +10,9 @@ test('User is able open page', async ({page}) => {
 test('User logedin and on products page', async ({page}) => {
     await page.goto(TestData.baseURL);
     await page.locator(TestData.usernameField).click();
-    await page.locator(TestData.usernameField).fill(loginData);
+    await page.locator(TestData.usernameField).fill(TestData.loginData);
     await page.locator(TestData.passwordField).click();
-    await page.locator(TestData.passwordField).fill(passwordData);
+    await page.locator(TestData.passwordField).fill(TestData.passwordData);
     await page.locator(TestData.loginButton).click();
     const expectedURL = `${TestData.baseURL}${TestData.pageURL}`;
     await expect(page).toHaveURL(expectedURL);
