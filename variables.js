@@ -11,6 +11,7 @@ static loginButton= "#login-button"
 export {loginData}
 
 class buttonsData {
-    static productSort= "select.productproduct_sort_container "
+    static productSort= ("data-test=product_sort_container")
 }
 export {buttonsData}
+//*[@id="header_container"]/div[2]/div/span
