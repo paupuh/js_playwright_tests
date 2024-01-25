@@ -2,16 +2,21 @@ class loginData {
 
 static homeURL= 'https://www.saucedemo.com/'
 static pageURL= 'inventory.html'
-static usernameField= "#user-name"
-static passwordField= "#password"
-static loginData= "standard_user"
-static passwordData= "secret_sauce"
-static loginButton= "#login-button"
+static usernameField= '#user-name'
+static passwordField= '#password'
+static loginData= 'standard_user'
+static passwordData= 'secret_sauce'
+static loginButton= '#login-button'
 }
 export {loginData}
 
 class buttonsData {
-    static productSort= ("data-test=product_sort_container")
+    static productSort= '[data-test=product_sort_container]'
+    static defaultSort= 'span.active_option:has-text("Name (A to Z)")'
 }
+
+
 export {buttonsData}
-//*[@id="header_container"]/div[2]/div/span
+    // static zaSort=
+    // static lTohSort=
+    // static hTolSort=
