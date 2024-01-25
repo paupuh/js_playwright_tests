@@ -14,9 +14,9 @@ class buttonsData {
     static productSort= '[data-test=product_sort_container]'
     static defaultSort= 'span.active_option:has-text("Name (A to Z)")'
 }
-
-
 export {buttonsData}
-    // static zaSort=
-    // static lTohSort=
-    // static hTolSort=
+
+class productsData {
+    static productContainer= '#inventory_container.inventory_container'
+}
+export {productsData}

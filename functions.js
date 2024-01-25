@@ -1,8 +1,6 @@
 const { test, expect } = require('@playwright/test');
 import { buttonsData, loginData } from './variables';
 
-
-
 async function isUserLoggedIn(page) {
     await page.goto('/');
     await page.locator(loginData.usernameField).click();
