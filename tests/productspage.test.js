@@ -22,12 +22,41 @@ test('Product contains all items on products page', async ({page}) => {
 });
 test('Sort list changes available for all options', async ({page}) => {
     await isUserLoggedIn(page);
+    // A to Z
+    let items = await page.$$eval('.inventory_item', (elements) =>
+        elements.map((element) => element.textContent.trim())
+    );
+    let sortedItems = [...items].sort();
+    expect(items).toEqual(sortedItems);
+    // Z to A
     await page.locator(buttonsData.productSort).click();
-    await page.locator(buttonsData.productSort).selectOption({name : 'Name (Z to A)'});
-    
+    await page.locator(buttonsData.productSort).selectOption('Name (Z to A)');
+    items = await page.$$eval('.inventory_item', (elements) =>
+        elements.map((element) => element.textContent.trim())
+    );
+    sortedItems = [...items].sort().reverse();
+    expect(items).toEqual(sortedItems);
+    // 'Price (low to high)'
+    await page.locator(buttonsData.productSort).click();
+    await page.locator(buttonsData.productSort).selectOption('Price (low to high)');
+    items = await page.$$eval('.inventory_item_price', (elements) =>
+        elements.map((element) => element.textContent.trim())
+    );
+    sortedItems = [...items].sort();
+    expect(items).toEqual(sortedItems);
+     // Check if the items are in alphabetical order
+    // await new Promise(r => setTimeout(r, 20000));
     // await page.getByRole('option', {name : 'Name (Z to A)'}).selectOption();
 
 });
-// test('User is able to add product to backet', async ({page}) => {
-//     await isUserLoggedIn(page);
-// }
+
+// const items = await page.$$eval('.inventory_list', (elements) =>
+//         elements.map((element) => element.textContent.trim())
+//     );
+
+//     // Check if the items are in alphabetical order
+//     const sortedItems = [...items].sort();
+//     expect(items).toEqual(sortedItems);
+// // test('User is able to add product to backet', async ({page}) => {
+// //     await isUserLoggedIn(page);
+// // }

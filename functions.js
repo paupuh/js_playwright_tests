@@ -18,18 +18,3 @@ async function isUserLoggedIn(page) {
     isUserLoggedIn,
   };
   
-  async function isAlph(){
-    let items = document.getElementsByClassName('.inventory_item_name ');
-
-    let lastLetter = undefined
-
-    items.forEach(item => {
-        console.log(typeof item)
-        if(!undefined && lastLetter <= item)
-            return false;
-
-        lastLetter = item;
-    });
-
-    return false;
-}
