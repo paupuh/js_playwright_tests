@@ -6,7 +6,7 @@ test('User is able open page', async ({page}) => {
     await expect(page).toHaveTitle(`Swag Labs`);
 })
 
-test('User logedin and on products page', async ({page}) => {
+test('User loged in and on products page', async ({page}) => {
     await isUserLoggedIn(page);
 });
 

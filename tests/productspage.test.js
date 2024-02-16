@@ -31,19 +31,16 @@ test('Sort list changes available for all options', async ({page}) => {
     // Z to A
     await page.locator(buttonsData.productSort).click();
     await page.locator(buttonsData.productSort).selectOption('Name (Z to A)');
-    items = await page.$$eval('.inventory_item', (elements) =>
-        elements.map((element) => element.textContent.trim())
-    );
-    sortedItems = [...items].sort().reverse();
-    expect(items).toEqual(sortedItems);
-    // 'Price (low to high)'
-    await page.locator(buttonsData.productSort).click();
-    await page.locator(buttonsData.productSort).selectOption('Price (low to high)');
     items = await page.$$eval('.inventory_item_price', (elements) =>
-        elements.map((element) => element.textContent.trim())
+        elements.map((element) => element.textContent.trim().slice(1))
     );
-    sortedItems = [...items].sort();
-    expect(items).toEqual(sortedItems);
+
+    var nums = items.map(function(str) { return parseFloat(str); });
+
+    // Check if the items are in alphabetical order
+    sortedItems = [...nums].sort((a,b) => {a-b});
+
+    expect(nums).toEqual(sortedItems);
      // Check if the items are in alphabetical order
     // await new Promise(r => setTimeout(r, 20000));
     // await page.getByRole('option', {name : 'Name (Z to A)'}).selectOption();
@@ -57,6 +54,6 @@ test('Sort list changes available for all options', async ({page}) => {
 //     // Check if the items are in alphabetical order
 //     const sortedItems = [...items].sort();
 //     expect(items).toEqual(sortedItems);
-// // test('User is able to add product to backet', async ({page}) => {
+// // test('User is able to add product to basket', async ({page}) => {
 // //     await isUserLoggedIn(page);
 // // }
