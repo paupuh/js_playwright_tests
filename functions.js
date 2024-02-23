@@ -15,6 +15,6 @@ async function isUserLoggedIn(page) {
   
   // problem z dokument, trzeba w inny sposob wyciagnac te wszytskei rpodukty z konteenera 
   module.exports = {
-    isUserLoggedIn,
+    isUserLoggedIn, 
   };
   
