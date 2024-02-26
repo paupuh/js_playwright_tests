@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu, loginData } from '../variables.js';
+import { buttonsData, hamburgerMenu, loginData, productsData } from '../locators.js';
 import { isUserLoggedIn } from '../functions.js';
 
 test('Product sort list unfolds when user clicks unfold button', async ({page}) => {
@@ -80,4 +80,53 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
         await expect(isHamburgerMenuHidden).toEqual(false);
     });
 
-    //await expect(page.locator("div.bm-menu-wrap")).toBeHidden();
+//await expect(page.locator("div.bm-menu-wrap")).toBeHidden();
+
+test('Hamburger menu closes when user clicks exit', async ({page}) => {
+    await isUserLoggedIn(page);
+    await page.locator(hamburgerMenu.menuButton).click();
+    await page.locator(hamburgerMenu.menuExit).click();
+
+    const visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
+    console.log(visibility) // wyciagam value atrybutu wyzej i wypisuje 
+    await expect(visibility).toEqual('true');
+});
+
+test ('Hamburger menu- no action taken when user selects "All items"', async ({page}) => {
+    await isUserLoggedIn(page);
+    await page.locator(hamburgerMenu.menuButton).click();
+    await page.locator(hamburgerMenu.allItems).click();
+
+    const expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
+    await expect(page).toHaveURL(expectedURL);
+});
+
+test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
+    await isUserLoggedIn(page);
+    await page.locator(hamburgerMenu.menuButton).click();
+    await page.locator(hamburgerMenu.aboutOpen).click();
+    const expectedURL = 'https://saucelabs.com/';
+    await expect(page).toHaveURL(expectedURL);
+    //also check if elements on page exists
+});
+
+// test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => {
+
+// });
+
+// test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
+
+// });
+
+test('Add to cart button adding item to shopping cart', async ({ page }) => {
+    await isUserLoggedIn(page);
+    const buttonIndex = 1;  // change index to targeted one
+    const addToCartButton = await page.$(`${productsData.addToCart}(${buttonIndex})`);
+
+    if (addToCartButton) {  // making sure that `addToCartButton` was found before click
+        await addToCartButton.click();
+        console.log('Test passed- Button "Add to cart" is clicable')
+    } else {
+        console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
+    }
+});

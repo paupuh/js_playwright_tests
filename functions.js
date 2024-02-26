@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, loginData } from './variables';
+import { buttonsData, loginData } from './locators';
 
 async function isUserLoggedIn(page) {
     await page.goto('/');
