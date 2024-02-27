@@ -13,7 +13,7 @@ async function isUserLoggedIn(page) {
     await expect(page).toHaveURL(expectedURL);
   }
   
-  // problem z dokument, trzeba w inny sposob wyciagnac te wszytskei rpodukty z konteenera 
+  // problem z dokument, trzeba w inny sposob wyciagnac te wszystkie produkty z kontenera 
   module.exports = {
     isUserLoggedIn,
   };

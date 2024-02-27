@@ -88,7 +88,7 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
     await page.locator(hamburgerMenu.menuExit).click();
 
     const visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
-    console.log(visibility) // wyciagam value atrybutu wyzej i wypisuje 
+    console.log(visibility) // getting out value of above attributte and write it
     await expect(visibility).toEqual('true');
 });
 
@@ -110,9 +110,17 @@ test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     //also check if elements on page exists
 });
 
-// test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => {
+test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => {
+    await isUserLoggedIn(page);
+    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
+    await addToCartButton.click();
+    expect(await page.locator(buttonsData.addedToCart).innerHTML()).toEqual('1');
+   
+    await page.locator(hamburgerMenu.menuButton).click();
+    await page.locator(hamburgerMenu.restet).click();
+    expect(await page.locator('a.shopping_cart_link').innerHTML()).toEqual('');
 
-// });
+});
 
 // test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
 
@@ -120,12 +128,12 @@ test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
 
 test('Add to cart button adding item to shopping cart', async ({ page }) => {
     await isUserLoggedIn(page);
-    const buttonIndex = 1;  // change index to targeted one
-    const addToCartButton = await page.$(`${productsData.addToCart}(${buttonIndex})`);
+    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
 
     if (addToCartButton) {  // making sure that `addToCartButton` was found before click
         await addToCartButton.click();
-        console.log('Test passed- Button "Add to cart" is clicable')
+        expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1');
+        console.log('Test passed- Button "Add to cart" adding item to cart')
     } else {
         console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
     }
