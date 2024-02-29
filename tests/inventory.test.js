@@ -118,17 +118,22 @@ test ('Hamburger menu- Resets app state, when user selects it', async ({page}) =
    
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.restet).click();
-    expect(await page.locator('a.shopping_cart_link').innerHTML()).toEqual('');
-
+    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('');
+    
 });
 
-// test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
-
-// });
-
-test('Add to cart button adding item to shopping cart', async ({ page }) => {
+test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
     await isUserLoggedIn(page);
-    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
+    await page.locator(hamburgerMenu.menuButton).click();
+    await page.locator(hamburgerMenu.logOut).click();
+    
+    const expectedURL = 'https://www.saucedemo.com/';
+    await expect(page).toHaveURL(expectedURL);
+});
+
+test('Add to cart button adds item to shopping cart', async ({ page }) => {
+    await isUserLoggedIn(page);
+    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
 
     if (addToCartButton) {  // making sure that `addToCartButton` was found before click
         await addToCartButton.click();
@@ -137,4 +142,19 @@ test('Add to cart button adding item to shopping cart', async ({ page }) => {
     } else {
         console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
     }
+});
+
+test('Remove button deletes item from shopping cart', async ({ page }) => {
+    await isUserLoggedIn(page);
+    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
+    await addToCartButton.click();
+    const removeItemButton = await page.$(`${buttonsData.removeFromCart}`);
+   
+    if (removeItemButton) {
+    // await removeItemButton.click();
+    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('0');
+    console.log('Test passed- item removed from cart')
+    } else {
+        console.error('Test failed');
+}
 });

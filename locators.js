@@ -2,8 +2,9 @@ class buttonsData {
     static defaultSort= 'span.active_option:has-text("Name (A to Z)")' 
     static productSort= '[data-test=product_sort_container]'
     static addedToCart= 'span.shopping_cart_badge'
+    static cartEmpty= 'a.shopping_cart_link'
     static addToCart = 'button.btn.btn_primary.btn_small.btn_inventory:nth-of-type'
-
+    static removeFromCart= 'button.btn.btn_secondary.btn_small.btn_inventory:has-text("Remove")'
 }
 export {buttonsData}
 
