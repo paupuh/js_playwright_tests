@@ -34,3 +34,9 @@ class hamburgerMenu {
     static restet= '#reset_sidebar_link'
 }
 export {hamburgerMenu}
+
+class cartData {
+
+}
+export {cartData}
+
