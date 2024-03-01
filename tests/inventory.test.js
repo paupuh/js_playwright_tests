@@ -151,8 +151,8 @@ test('Remove button deletes item from shopping cart', async ({ page }) => {
     const removeItemButton = await page.$(`${buttonsData.removeFromCart}`);
    
     if (removeItemButton) {
-    // await removeItemButton.click();
-    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('0');
+    await removeItemButton.click();
+    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('');
     console.log('Test passed- item removed from cart')
     } else {
         console.error('Test failed');
