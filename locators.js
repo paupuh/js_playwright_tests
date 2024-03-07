@@ -36,7 +36,8 @@ class hamburgerMenu {
 export {hamburgerMenu}
 
 class cartData {
-
+    static continueShpButton= '#continue-shopping'
+    static checkoutButton= '#checkout'
 }
 export {cartData}
 

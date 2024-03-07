@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 import { buttonsData, hamburgerMenu, loginData, productsData } from '../locators.js';
-import { isUserLoggedIn } from '../functions.js';
+import { isUserLoggedIn, isProductAddedToCart } from '../functions.js';
+// @ts-check
 
 test('Product sort list unfolds when user clicks unfold button', async ({page}) => {
     await isUserLoggedIn(page);
@@ -74,7 +75,7 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
         await isUserLoggedIn(page);
         await page.locator(hamburgerMenu.menuButton).click();
 
-        const isHamburgerMenuHidden = await page.$eval(hamburgerMenu.menuOpen, (menu) => {
+        let isHamburgerMenuHidden = await page.$eval(hamburgerMenu.menuOpen, (menu) => {
             return !menu.getAttribute('aria-hidden') === 'false';
         });
         await expect(isHamburgerMenuHidden).toEqual(false);
@@ -87,7 +88,7 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.menuExit).click();
 
-    const visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
+    let visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
     console.log(visibility) // getting out value of above attributte and write it
     await expect(visibility).toEqual('true');
 });
@@ -97,7 +98,7 @@ test ('Hamburger menu- no action taken when user selects "All items"', async ({p
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.allItems).click();
 
-    const expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
+    let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
     await expect(page).toHaveURL(expectedURL);
 });
 
@@ -105,14 +106,14 @@ test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     await isUserLoggedIn(page);
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.aboutOpen).click();
-    const expectedURL = 'https://saucelabs.com/';
+    let expectedURL = 'https://saucelabs.com/';
     await expect(page).toHaveURL(expectedURL);
     //also check if elements on page exists
 });
 
 test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => {
     await isUserLoggedIn(page);
-    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
+    let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();
     expect(await page.locator(buttonsData.addedToCart).innerHTML()).toEqual('1');
    
@@ -127,28 +128,20 @@ test ('Hamburger menu- Logout, logging out user, when user selects it', async ({
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.logOut).click();
     
-    const expectedURL = 'https://www.saucedemo.com/';
+    let expectedURL = 'https://www.saucedemo.com/';
     await expect(page).toHaveURL(expectedURL);
 });
 
 test('Add to cart button adds item to shopping cart', async ({ page }) => {
     await isUserLoggedIn(page);
-    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
-
-    if (addToCartButton) {  // making sure that `addToCartButton` was found before click
-        await addToCartButton.click();
-        expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1');
-        console.log('Test passed- Button "Add to cart" adding item to cart')
-    } else {
-        console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
-    }
+    isProductAddedToCart
 });
 
 test('Remove button deletes item from shopping cart', async ({ page }) => {
     await isUserLoggedIn(page);
-    const addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
+    let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();
-    const removeItemButton = await page.$(`${buttonsData.removeFromCart}`);
+    let removeItemButton = await page.$(`${buttonsData.removeFromCart}`);
    
     if (removeItemButton) {
     await removeItemButton.click();
