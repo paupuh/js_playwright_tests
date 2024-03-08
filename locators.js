@@ -2,7 +2,7 @@ class buttonsData {
     static defaultSort= 'span.active_option:has-text("Name (A to Z)")' 
     static productSort= '[data-test=product_sort_container]'
     static addedToCart= 'span.shopping_cart_badge'
-    static cartEmpty= 'a.shopping_cart_link'
+    static shoppingCart= 'a.shopping_cart_link'
     static addToCart = 'button.btn.btn_primary.btn_small.btn_inventory:nth-of-type'
     static removeFromCart= 'button.btn.btn_secondary.btn_small.btn_inventory:has-text("Remove")'
 }
@@ -38,6 +38,14 @@ export {hamburgerMenu}
 class cartData {
     static continueShpButton= '#continue-shopping'
     static checkoutButton= '#checkout'
+    static placeholderFirstName= '#first-name'
+    static placeholderLastName= '#last-name'
+    static placeholderZipCpde= '#postal-code'
+    static cancelButton= '#cancel'
+    static continueButton= '#continue'
+    static nameData= 'TestName'
+    static surnameData= 'TestSurname'
+    static zipData= '71-472'
 }
 export {cartData}
 

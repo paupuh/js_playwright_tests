@@ -119,7 +119,7 @@ test ('Hamburger menu- Resets app state, when user selects it', async ({page}) =
    
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.restet).click();
-    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('');
+    expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
     
 });
 
@@ -145,7 +145,7 @@ test('Remove button deletes item from shopping cart', async ({ page }) => {
    
     if (removeItemButton) {
     await removeItemButton.click();
-    expect(await page.locator(buttonsData.cartEmpty).innerHTML()).toEqual('');
+    expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
     console.log('Test passed- item removed from cart')
     } else {
         console.error('Test failed');

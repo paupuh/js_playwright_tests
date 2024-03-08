@@ -13,16 +13,14 @@ async function isUserLoggedIn(page) {
     await expect(page).toHaveURL(expectedURL);
   }
   
-
   async function isProductAddedToCart(page) {
     await isUserLoggedIn(page);
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
 
   if (addToCartButton) {  // making sure that `addToCartButton` was found before click
       await addToCartButton.click();
-      expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1');
-      console.log('Test passed- Button "Add to cart" adding item to cart')
-  } else {
+      expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1'); } 
+      else {
       console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
   }
   }
