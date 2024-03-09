@@ -13,7 +13,7 @@ async function isUserLoggedIn(page) {
     await expect(page).toHaveURL(expectedURL);
   }
   
-  async function isProductAddedToCart(page) {
+async function isProductAddedToCart(page) {
     await isUserLoggedIn(page);
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
 

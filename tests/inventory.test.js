@@ -9,7 +9,7 @@ test('Product sort list unfolds when user clicks unfold button', async ({page}) 
     await page.locator(buttonsData.productSort).click();
 });
 
-test('Product sort list contains 4 choices', async ({page}) => {
+test('Product sort list contains 4 choices @smoke', async ({page}) => {
     await isUserLoggedIn(page);
     await page.locator(buttonsData.productSort).click();
     await expect(page.getByRole('option', {name : 'Name (A to Z)'})).toBeEnabled();
@@ -71,7 +71,7 @@ test('Sort list changes applicable for all options', async ({page}) => {
     expect(nums).toEqual(sortedItems);
 
 });
-test('Hamburger menu opens when user clicks it', async ({page}) => {
+test('Hamburger menu opens when user clicks it @smoke', async ({page}) => {
         await isUserLoggedIn(page);
         await page.locator(hamburgerMenu.menuButton).click();
 
@@ -132,12 +132,12 @@ test ('Hamburger menu- Logout, logging out user, when user selects it', async ({
     await expect(page).toHaveURL(expectedURL);
 });
 
-test('Add to cart button adds item to shopping cart', async ({ page }) => {
+test('Add to cart button adds item to shopping cart @smoke', async ({ page }) => {
     await isUserLoggedIn(page);
     isProductAddedToCart
 });
 
-test('Remove button deletes item from shopping cart', async ({ page }) => {
+test('Remove button deletes item from shopping cart @smoke', async ({ page }) => {
     await isUserLoggedIn(page);
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();

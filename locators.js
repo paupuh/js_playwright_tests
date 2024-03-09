@@ -46,6 +46,10 @@ class cartData {
     static nameData= 'TestName'
     static surnameData= 'TestSurname'
     static zipData= '71-472'
+    static productQuantity= 'cart_quantity:has-text("1")'
+    static productPrice= 'inventory_item_price'
+    static totalPrice= 'summary_subtotal_label'
 }
 export {cartData}
+
 

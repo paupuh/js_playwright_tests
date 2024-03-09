@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 import { buttonsData, cartData } from '../locators.js';
-import { isUserLoggedIn, isProductAddedToCart } from '../functions.js';
+import { isUserLoggedIn, isProductAddedToCart , isQuantityCorrect } from '../functions.js';
 
 // @ts-check
 
@@ -44,7 +44,7 @@ test ('When shopping cart is empty, continue shopping button is enabled and dire
     await page.locator(buttonsData.shoppingCart).click();
 
     await page.locator(cartData.continueShpButton).click();
-    const expectedURL ='https://www.saucedemo.com/inventory.html';
+    let expectedURL ='https://www.saucedemo.com/inventory.html';
     expect(await page.url()).toBe(expectedURL)
 });
 
@@ -60,10 +60,10 @@ test ('When the shopping cart contains at least one product, the user is directe
         page.locator(cartData.placeholderZipCpde).isEnabled(),
         page.locator(cartData.cancelButton).isEnabled(),
         page.locator(cartData.continueButton).isEnabled()
-      ]);
+     ]);
 });
 
-test ('When user is in checkout tab can finish shopping', async ({page}) => {
+test ('When user is in checkout tab can finish shopping process @smoke', async ({page}) => {
     await isUserLoggedIn(page);
     await isProductAddedToCart(page);
     await page.locator(buttonsData.shoppingCart).click();
@@ -72,4 +72,24 @@ test ('When user is in checkout tab can finish shopping', async ({page}) => {
     await page.locator(cartData.placeholderFirstName).fill(cartData.nameData);
     await page.locator(cartData.placeholderLastName).fill(cartData.surnameData);
     await page.locator(cartData.placeholderZipCpde).fill(cartData.zipData);
+
+    await page.locator(cartData.continueButton).click();
+    let expectedURL = 'https://www.saucedemo.com/checkout-step-two.html'
+    expect(await page.url()).toBe(expectedURL)
+    await Promise.all([
+        page.locator(cartData.productQuantity).isVisible(),
+        page.locator(cartData.productPrice).isVisible(),
+        page.locator(cartData.totalPrice).isVisible()
+    ]);
+});
+
+test ('User directed back to cart when checkout cancelled', async ({page}) => {
+    await isUserLoggedIn(page);
+    await isProductAddedToCart(page);
+    await page.locator(buttonsData.shoppingCart).click();
+    await page.locator(cartData.checkoutButton).click();
+    await page.locator(cartData.cancelButton).click();
+
+    let expectedURL = 'https://www.saucedemo.com/cart.html'
+    expect(await page.url()).toBe(expectedURL)
 });
