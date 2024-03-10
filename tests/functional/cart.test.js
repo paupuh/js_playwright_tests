@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, cartData } from '../locators.js';
-import { isUserLoggedIn, isProductAddedToCart , isQuantityCorrect } from '../functions.js';
+import { buttonsData, cartData } from '../../locators.js';
+import { isUserLoggedIn, isProductAddedToCart , isQuantityCorrect } from '../../functions.js';
 
 // @ts-check
 
@@ -80,6 +80,7 @@ test ('When user is in checkout tab can finish shopping process @smoke', async (
         page.locator(cartData.productQuantity).isVisible(),
         page.locator(cartData.productPrice).isVisible(),
         page.locator(cartData.totalPrice).isVisible()
+        //add steps to finish full shopping journey
     ]);
 });
 

@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu, loginData, productsData } from '../locators.js';
-import { isUserLoggedIn, isProductAddedToCart } from '../functions.js';
+import { buttonsData, hamburgerMenu, loginData, productsData } from '../../locators.js';
+import { isUserLoggedIn, isProductAddedToCart } from '../../functions.js';
 // @ts-check
 
 test('Product sort list unfolds when user clicks unfold button', async ({page}) => {
