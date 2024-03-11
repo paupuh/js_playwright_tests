@@ -49,6 +49,8 @@ class cartData {
     static productQuantity= 'cart_quantity:has-text("1")'
     static productPrice= 'inventory_item_price'
     static totalPrice= 'summary_subtotal_label'
+    static finishButton= '#finish'
+    static backHomeBtn= '#back-to-products'
 }
 export {cartData}
 

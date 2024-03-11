@@ -109,6 +109,8 @@ test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     let expectedURL = 'https://saucelabs.com/';
     await expect(page).toHaveURL(expectedURL);
     //also check if elements on page exists
+
+    
 });
 
 test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => {

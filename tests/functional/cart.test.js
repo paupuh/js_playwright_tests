@@ -79,9 +79,21 @@ test ('When user is in checkout tab can finish shopping process @smoke', async (
     await Promise.all([
         page.locator(cartData.productQuantity).isVisible(),
         page.locator(cartData.productPrice).isVisible(),
-        page.locator(cartData.totalPrice).isVisible()
-        //add steps to finish full shopping journey
+        page.locator(cartData.totalPrice).isVisible()        
     ]);
+        await page.goto('https://www.saucedemo.com/cart.html');
+        const cartValue = await page.$eval('div.cart_quantity', element => element.textContent);
+        await page.goto('https://www.saucedemo.com/checkout-step-two.html');
+        const checkoutValue = await page.$eval('div.cart_quantity', element => element.textContent);
+        expect(cartValue).toEqual(checkoutValue);         // Compare cart quantity 
+
+        await page.locator(cartData.finishButton).click();
+        let finalURL = 'https://www.saucedemo.com/checkout-complete.html'
+        expect (await page.url()).toBe(finalURL)
+
+        await page.locator(cartData.backHomeBtn).click();
+        let correctURL = 'https://www.saucedemo.com/inventory.html'
+        expect (await page.url()).toBe(correctURL)
 });
 
 test ('User directed back to cart when checkout cancelled', async ({page}) => {
