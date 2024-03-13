@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu } from '../pom/inventoryactions.js';
-import { isUserLoggedIn, isProductAddedToCart, loginData } from '../pom/loginactions.js';
-// import { cartData, cartMenu } from '../pom/cartactions.js';
+import { buttonsData, hamburgerMenu, productsData } from '../pom/inventorypage.js';
+// import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
+const { isUserLoggedIn, isProductAddedToCart } = require('../pom/loginpage.js');
 
 // @ts-check
 
@@ -93,12 +93,13 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
     await expect(visibility).toEqual('true');
 });
 
-//test shouldn't fail, to be fixed
-test.skip ('Hamburger menu- All items opens, when user selects it', async ({page}) => {   
+test ('Hamburger menu- All items opens, when user selects it', async ({page}) => {   
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.allItems).click();
 
-    let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
+    // THISIS FAILING, DON'T KNOW THE REASON 
+    // let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
+    let expectedURL = `https://www.saucedemo.com/inventory.html`;
     await expect(page).toHaveURL(expectedURL);
 });
 

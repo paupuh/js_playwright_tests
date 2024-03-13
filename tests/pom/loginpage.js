@@ -1,15 +1,15 @@
-import { buttonsData } from '../pom/inventoryactions.js';
+import { buttonsData } from './inventorypage.js';
 const { test, expect } = require('@playwright/test');
 
 //Locators
 export class loginData {
-    static homeURL= 'https://www.saucedemo.com/'
-    static loginData= 'standard_user'
-    static loginButton= '#login-button'  
-    static pageURL= 'inventory.html'
-    static passwordField= '#password'
-    static passwordData= 'secret_sauce'
-    static usernameField= '#user-name'
+    static homeURL = 'https://www.saucedemo.com/';
+    static loginData = 'standard_user';
+    static loginButton = '#login-button';
+    static pageURL = 'inventory.html';
+    static passwordField = '#password';
+    static passwordData = 'secret_sauce';
+    static usernameField = '#user-name';
 }
 
 //Actions   

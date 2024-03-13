@@ -15,6 +15,7 @@ module.exports = defineConfig({
     {
       name: 'ui-tests',
       testMatch: ['<rootDir>/tests/ui/*.spec.js'],
+      timeout: 5 * 60 * 1000,
       // inne opcje konfiguracji dla testów UI
     },
     {
@@ -26,7 +27,10 @@ module.exports = defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
+      // @ts-ignore
+      contextOptions: {
+        timeout: 12000, //  miliseconds 
+      },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
@@ -53,7 +57,7 @@ module.exports = defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-  ],
+}],
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

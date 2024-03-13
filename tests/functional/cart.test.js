@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData } from '../pom/inventoryactions.js';
-import { isUserLoggedIn, isProductAddedToCart, loginData } from '../pom/loginactions.js';
-import { cartData, cartMenu,  } from '../pom/cartactions.js';
+import { buttonsData } from '../pom/inventorypage.js';
+import { isUserLoggedIn, isProductAddedToCart, loginData } from '../pom/loginpage.js';
+import { cartData, cartMenu,  } from '../pom/cartpage.js';
 
 // @ts-check
 

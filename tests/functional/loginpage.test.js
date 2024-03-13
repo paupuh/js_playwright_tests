@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-import { isUserLoggedIn } from '../pom/loginactions.js';
+import { isUserLoggedIn } from '../pom/loginpage.js';
 // @ts-check
 
 test.beforeEach(async ({ page }) => {
