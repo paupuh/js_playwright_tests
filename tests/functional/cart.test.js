@@ -1,11 +1,15 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, cartData } from '../../locators.js';
-import { isUserLoggedIn, isProductAddedToCart , isQuantityCorrect } from '../../functions.js';
+import { buttonsData } from '../pom/inventoryactions.js';
+import { isUserLoggedIn, isProductAddedToCart, loginData } from '../pom/loginactions.js';
+import { cartData, cartMenu,  } from '../pom/cartactions.js';
 
 // @ts-check
 
-test ('Cart opens when user clicks shopping cart icon', async ({page}) => {
-    await isUserLoggedIn(page);
+test.beforeEach(async ({ page }) => {
+    await isUserLoggedIn(page)  
+});
+
+test ('Cart opens when user clicks shopping cart icon', async ({page}) => {      
     await page.locator(buttonsData.shoppingCart).click();
 
     let expectedURL = 'https://www.saucedemo.com/cart.html';
@@ -13,7 +17,6 @@ test ('Cart opens when user clicks shopping cart icon', async ({page}) => {
 });
 
 test ('When shopping cart contains at least 1 product all buttons enabled and directs to correct links', async ({page}) => {
-    await isUserLoggedIn(page);
     await isProductAddedToCart(page);
     await page.locator(buttonsData.shoppingCart).click();
 
@@ -31,7 +34,6 @@ test ('When shopping cart contains at least 1 product all buttons enabled and di
 
 // BUG - TEST FAILED, reported in jira. Remove skip when fixed
 test.skip('When shopping cart is empty, checkout button is disabled', async ({ page }) => {
-    await isUserLoggedIn(page);
     await page.locator(buttonsData.shoppingCart).click();
   
     await page.locator(cartData.checkoutButton).click();
@@ -40,7 +42,6 @@ test.skip('When shopping cart is empty, checkout button is disabled', async ({ p
   });
   
 test ('When shopping cart is empty, continue shopping button is enabled and directs to corret tab', async ({page}) => {
-    await isUserLoggedIn(page);
     await page.locator(buttonsData.shoppingCart).click();
 
     await page.locator(cartData.continueShpButton).click();
@@ -49,7 +50,6 @@ test ('When shopping cart is empty, continue shopping button is enabled and dire
 });
 
 test ('When the shopping cart contains at least one product, the user is directed to the checkout', async ({page}) => {
-    await isUserLoggedIn(page);
     await isProductAddedToCart(page);
     await page.locator(buttonsData.shoppingCart).click();
 
@@ -63,11 +63,10 @@ test ('When the shopping cart contains at least one product, the user is directe
      ]);
 });
 
-test ('When user is in checkout tab can finish shopping process @smoke', async ({page}) => {
-    await isUserLoggedIn(page);
+test ('When user is in checkout tab can finish shopping process', async ({page}) => {
     await isProductAddedToCart(page);
     await page.locator(buttonsData.shoppingCart).click();
-
+// add test proving that user has to fiilin all of the fields, if not there is an error and user can't go to the next step
     await page.locator(cartData.checkoutButton).click();
     await page.locator(cartData.placeholderFirstName).fill(cartData.nameData);
     await page.locator(cartData.placeholderLastName).fill(cartData.surnameData);
@@ -96,8 +95,7 @@ test ('When user is in checkout tab can finish shopping process @smoke', async (
         expect (await page.url()).toBe(correctURL)
 });
 
-test ('User directed back to cart when checkout cancelled', async ({page}) => {
-    await isUserLoggedIn(page);
+test ('User directed back to cart when checkout cancelled', async ({page}) => {    
     await isProductAddedToCart(page);
     await page.locator(buttonsData.shoppingCart).click();
     await page.locator(cartData.checkoutButton).click();

@@ -1,7 +1,19 @@
+import { buttonsData } from '../pom/inventoryactions.js';
 const { test, expect } = require('@playwright/test');
-import { buttonsData, loginData } from './locators';
 
-async function isUserLoggedIn(page) {
+//Locators
+export class loginData {
+    static homeURL= 'https://www.saucedemo.com/'
+    static loginData= 'standard_user'
+    static loginButton= '#login-button'  
+    static pageURL= 'inventory.html'
+    static passwordField= '#password'
+    static passwordData= 'secret_sauce'
+    static usernameField= '#user-name'
+}
+
+//Actions   
+export async function isUserLoggedIn(page) {
     await page.goto('/');
     await page.locator(loginData.usernameField).click();
     await page.locator(loginData.usernameField).fill(loginData.loginData);
@@ -13,7 +25,7 @@ async function isUserLoggedIn(page) {
     await expect(page).toHaveURL(expectedURL);
   }
   
-async function isProductAddedToCart(page) {
+export async function isProductAddedToCart(page) {
     await isUserLoggedIn(page);
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
 
@@ -25,9 +37,12 @@ async function isProductAddedToCart(page) {
   }
   }
   
-  // problem z dokument, trzeba w inny sposob wyciagnac te wszystkie produkty z kontenera 
-  module.exports = {
+module.exports = {
     isUserLoggedIn,
     isProductAddedToCart,
   }
+
+
+
+
 

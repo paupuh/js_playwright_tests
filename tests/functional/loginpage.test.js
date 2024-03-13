@@ -1,13 +1,13 @@
 const { test, expect } = require('@playwright/test');
-import { isUserLoggedIn } from '../../functions.js';
+import { isUserLoggedIn } from '../pom/loginactions.js';
 // @ts-check
 
-test('User is able open page @smoke', async ({page}) => {
+test.beforeEach(async ({ page }) => {
+    await isUserLoggedIn(page)  
+});
+
+test('User is able open page', async ({page}) => {
     await page.goto('/');
     await expect(page).toHaveTitle(`Swag Labs`);
 })
-
-test('User logged in and on products page @smoke', async ({page}) => {
-    await isUserLoggedIn(page);
-});
 
