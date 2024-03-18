@@ -1,5 +1,5 @@
 import { buttonsData } from './inventorypage.js';
-const { test, expect } = require('@playwright/test');
+const { expect } = require('@playwright/test');
 
 //Locators
 export class loginData {
@@ -38,6 +38,7 @@ export async function isProductAddedToCart(page) {
   }
   
 module.exports = {
+    loginData,
     isUserLoggedIn,
     isProductAddedToCart,
   }

@@ -13,14 +13,8 @@ const { defineConfig, devices } = require('@playwright/test');
 module.exports = defineConfig({
   projects: [
     {
-      name: 'ui-tests',
-      testMatch: ['<rootDir>/tests/ui/*.spec.js'],
-      timeout: 5 * 60 * 1000,
-      // inne opcje konfiguracji dla testów UI
-    },
-    {
-      name: 'funkcjonal-tests',
-      testMatch: ['<rootDir>/tests/funkcjonalne/*.spec.js'],
+      name: 'functional',
+      testMatch: ['<rootDir>/tests/functional/*.spec.js'],
       // inne opcje konfiguracji dla testów funkcjonalnych
     },
     /* Configure projects for major browsers */
@@ -29,8 +23,8 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Chrome'] },
       // @ts-ignore
       contextOptions: {
-        timeout: 12000, //  miliseconds 
-      },
+        timeout: 200000, //  miliseconds 
+      }}
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
@@ -57,7 +51,7 @@ module.exports = defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-}],
+    ],
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

@@ -1,3 +1,4 @@
+const { expect } = require('@playwright/test');
 
 //Locators
 export class hamburgerMenu {
@@ -20,7 +21,23 @@ export class buttonsData {
 
 export class productsData {
     static productContainer= '#inventory_container.inventory_container'
+    static inventoryUrl= 'https://www.saucedemo.com/inventory.html'
+    static aboutUrl= 'https://saucelabs.com/'
 }
 
 //Actions
+async function getItems(page, locator){
+    return (await page.$$eval(locator, (elements) => elements.map((element) => element.textContent.trim())));
+}
 
+async function getPrices(page, locator){
+    return (await page.$$eval(locator, (elements) => elements.map((element) => element.textContent.trim().slice(1))));
+}
+
+module.exports = {
+    getItems,
+    getPrices,
+    hamburgerMenu,
+    buttonsData,
+    productsData,
+  };

@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu, productsData } from '../pom/inventorypage.js';
-// import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
-const { isUserLoggedIn, isProductAddedToCart } = require('../pom/loginpage.js');
+import { buttonsData, hamburgerMenu, getItems, getPrices, productsData } from '../pom/inventorypage.js';
+import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
+import { assertURL } from '../pom/cartpage.js';
 
 // @ts-check
 
@@ -14,11 +14,23 @@ test('Product sort list unfolds when user clicks unfold button', async ({page}) 
     await page.locator(buttonsData.productSort).click();
 });
 
-test('Product sort list contains 4 choices', async ({page}) => {
+test('Product sort list contains (A to Z) choice', async ({page}) => {
     await page.locator(buttonsData.productSort).click();
     await expect(page.getByRole('option', {name : 'Name (A to Z)'})).toBeEnabled();
+});
+
+test('Product sort list contains (Z to A) choice', async ({page}) => {
+    await page.locator(buttonsData.productSort).click();
     await expect(page.getByRole('option', {name : 'Name (Z to A)'})).toBeEnabled();
+});
+
+test('Product sort list contains (low to high) choice', async ({page}) => {
+    await page.locator(buttonsData.productSort).click();
     await expect(page.getByRole('option', {name : 'Price (low to high)'})).toBeEnabled();
+});
+
+test('Product sort list contains (high to low) choice', async ({page}) => {
+    await page.locator(buttonsData.productSort).click();
     await expect(page.getByRole('option', {name : 'Price (high to low)'})).toBeEnabled();
 });
 
@@ -26,53 +38,41 @@ test('Product sort list default A-Z selected', async ({page}) => {
     await expect(page.locator(buttonsData.defaultSort)).toBeVisible();
 });
 
-test('Sort list changes applicable for all options', async ({page}) => {
-    // A to Z
-    let items = await page.$$eval('.inventory_item', (elements) =>
-        elements.map((element) => element.textContent.trim())
-    );
+test('Sort list changes applicable for (A to Z)', async ({page}) => {
+    let items =  await getItems(page, '.inventory_item');
     let sortedItems = [...items].sort();
     expect(items).toEqual(sortedItems);
+});
  
-    // Z to A
+test('Sort list changes applicable for (Z to A)', async ({page}) => {
     await page.locator(buttonsData.productSort).click();
     await page.locator(buttonsData.productSort).selectOption('Name (Z to A)');
  
-    items = await page.$$eval('.inventory_item', (elements) =>
-        elements.map((element) => element.textContent.trim())
-    );
+    let inventoryContainer =  await getItems(page, '.inventory_item');
+    let sortedItems = [...inventoryContainer].sort().reverse();
+    expect(inventoryContainer).toEqual(sortedItems);
+});
  
-    sortedItems = [...items].sort().reverse();
-    expect(items).toEqual(sortedItems);
- 
-    //Low to High
+test('Sort list changes applicable for (low to high)', async ({page}) => { 
     await page.locator(buttonsData.productSort).click();
     await page.locator(buttonsData.productSort).selectOption('Price (low to high)');
  
-    items = await page.$$eval('.inventory_item_price', (elements) =>
-        elements.map((element) => element.textContent.trim().slice(1))
-    );
+    let items =  await getPrices(page, '.inventory_item_price');
+    let inventoryContainer = items.map(function(str) { return parseFloat(str); });
+    let sortedItems = [...inventoryContainer.sort((a,b) => {a-b})];
+    expect(inventoryContainer).toEqual(sortedItems);
+});
 
-    // Sort list changes applicable for all options'
-    var nums = items.map(function(str) { return parseFloat(str); });
- 
-    sortedItems = [...nums].sort((a,b) => {a-b});
-    expect(nums).toEqual(sortedItems);
- 
- 
-     //High to Low
+test('Sort list changes applicable for (high to low)', async ({page}) => { 
      await page.locator(buttonsData.productSort).click();
      await page.locator(buttonsData.productSort).selectOption('Price (high to low)');
  
-    items = await page.$$eval('.inventory_item_price', (elements) =>
-        elements.map((element) => element.textContent.trim().slice(1))
-    );
- 
-    var nums = items.map(function(str) { return parseFloat(str); });
- 
-    sortedItems = [...nums].sort((a,b) => {a-b});
-    expect(nums).toEqual(sortedItems);
+     let items =  await getPrices(page, '.inventory_item_price');
+     let inventoryContainer = items.map(function(str) { return parseFloat(str); });
+     let sortedItems = [...inventoryContainer].sort((a,b) => {a-b});
+     expect(inventoryContainer).toEqual(sortedItems);
 });
+
 test('Hamburger menu opens when user clicks it', async ({page}) => {       
         await page.locator(hamburgerMenu.menuButton).click();
 
@@ -81,8 +81,6 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
         });
         await expect(isHamburgerMenuHidden).toEqual(false);
     });
-
-//await expect(page.locator("div.bm-menu-wrap")).toBeHidden();
 
 test('Hamburger menu closes when user clicks exit', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
@@ -96,22 +94,15 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
 test ('Hamburger menu- All items opens, when user selects it', async ({page}) => {   
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.allItems).click();
-
-    // THISIS FAILING, DON'T KNOW THE REASON 
-    // let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
-    let expectedURL = `https://www.saucedemo.com/inventory.html`;
+    let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
     await expect(page).toHaveURL(expectedURL);
 });
 
 test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
-    await page.locator(hamburgerMenu.aboutOpen).click();
-   
-    let expectedURL = 'https://saucelabs.com/';
-    await expect(page).toHaveURL(expectedURL);
+    await page.locator(hamburgerMenu.aboutOpen).click();   
+    await assertURL(page, productsData.aboutUrl);
     //also check if elements on page exists
-
-    
 });
 
 test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => { 
@@ -121,16 +112,13 @@ test ('Hamburger menu- Resets app state, when user selects it', async ({page}) =
    
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.restet).click();
-    expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
-    
+    expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual(''); 
 });
 
 test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.logOut).click();
-    
-    let expectedURL = 'https://www.saucedemo.com/';
-    await expect(page).toHaveURL(expectedURL);
+    await assertURL(page, loginData.homeURL);
 });
 
 test('Add to cart button adds item to shopping cart', async ({ page }) => {  
