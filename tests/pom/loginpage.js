@@ -1,5 +1,5 @@
-import { buttonsData } from './inventorypage.js';
 const { expect } = require('@playwright/test');
+import { buttonsData, pageData, productsData } from './inventorypage.js';
 
 //Locators
 export class loginData {
@@ -23,6 +23,7 @@ export async function isUserLoggedIn(page) {
   
     const expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
     await expect(page).toHaveURL(expectedURL);
+    expect(await page.locator(pageData.pageTitle).innerHTML()).toContain('Products');
   }
   
 export async function isProductAddedToCart(page) {

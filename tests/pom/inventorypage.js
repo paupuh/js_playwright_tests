@@ -17,12 +17,17 @@ export class buttonsData {
     static addedToCart= 'span.shopping_cart_badge'
     static shoppingCart= 'a.shopping_cart_link'
     static addToCart = 'button.btn.btn_primary.btn_small.btn_inventory:nth-of-type'
+    static removeButton= 'button.btn.btn_secondary.btn_small.cart_button[data-test^="remove-"]'
 }
 
 export class productsData {
     static productContainer= '#inventory_container.inventory_container'
     static inventoryUrl= 'https://www.saucedemo.com/inventory.html'
     static aboutUrl= 'https://saucelabs.com/'
+}
+
+export class pageData {
+    static pageTitle= 'span.title';
 }
 
 //Actions
@@ -40,4 +45,5 @@ module.exports = {
     hamburgerMenu,
     buttonsData,
     productsData,
+    pageData,
   };

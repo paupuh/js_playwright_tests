@@ -1,8 +1,8 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu, getItems, getPrices, productsData } from '../pom/inventorypage.js';
+import { buttonsData, hamburgerMenu, getItems, getPrices, productsData, pageData } from '../pom/inventorypage.js';
 import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
 import { assertURL } from '../pom/cartpage.js';
-
+import { prependListener } from 'process';
 // @ts-check
 
 test.beforeEach(async ({ page }) => {
@@ -12,6 +12,7 @@ test.beforeEach(async ({ page }) => {
 test('Product sort list unfolds when user clicks unfold button', async ({page}) => {
     await expect(page.locator(buttonsData.productSort)).toBeVisible();
     await page.locator(buttonsData.productSort).click();
+
 });
 
 test('Product sort list contains (A to Z) choice', async ({page}) => {
@@ -80,6 +81,7 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
             return !menu.getAttribute('aria-hidden') === 'false';
         });
         await expect(isHamburgerMenuHidden).toEqual(false);
+        await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
     });
 
 test('Hamburger menu closes when user clicks exit', async ({page}) => {
@@ -89,26 +91,26 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
     let visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
     console.log(visibility) // getting out value of above attributte and write it
     await expect(visibility).toEqual('true');
+    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test ('Hamburger menu- All items opens, when user selects it', async ({page}) => {   
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.allItems).click();
-    let expectedURL = `${loginData.homeURL}${loginData.pageURL}`;
-    await expect(page).toHaveURL(expectedURL);
+
+    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
-    await page.locator(hamburgerMenu.aboutOpen).click();   
+    await page.locator(hamburgerMenu.aboutOpen).click(); 
     await assertURL(page, productsData.aboutUrl);
-    //also check if elements on page exists
 });
 
 test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => { 
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();
-    expect(await page.locator(buttonsData.addedToCart).innerHTML()).toEqual('1');
+    expect (await page.locator(buttonsData.addedToCart).innerHTML()).toEqual('1');
    
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.restet).click();
@@ -118,7 +120,9 @@ test ('Hamburger menu- Resets app state, when user selects it', async ({page}) =
 test ('Hamburger menu- Logout, logging out user, when user selects it', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
     await page.locator(hamburgerMenu.logOut).click();
+
     await assertURL(page, loginData.homeURL);
+    await expect(page).toHaveTitle('Swag Labs')  
 });
 
 test('Add to cart button adds item to shopping cart', async ({ page }) => {  
@@ -128,13 +132,9 @@ test('Add to cart button adds item to shopping cart', async ({ page }) => {
 test('Remove button deletes item from shopping cart', async ({ page }) => {
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();
-    let removeItemButton = await page.$(`${buttonsData.removeFromCart}`);
-   
-    if (removeItemButton) {
-    await removeItemButton.click();
+    await page.locator(buttonsData.shoppingCart).click();
+    await page.locator(buttonsData.removeButton).click();
     expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
-    console.log('Test passed- item removed from cart')
-    } else {
-        console.error('Test failed');
-}
-});
+}); 
+
+
