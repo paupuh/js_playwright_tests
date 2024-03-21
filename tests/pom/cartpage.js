@@ -28,17 +28,12 @@ export class cartMenu {
   }
 
 //Actions
-
 export async function assertURL(page, url, locator = null, name = '') {
   await expect(page).toHaveURL(url);
   if (locator) {
       expect(await page.locator(locator).innerHTML()).toContain(name);
   }
 }
-// export async function assertURL(page, url, locator, name) {
-//     await expect(page).toHaveURL(url);
-//     expect (await page.locator(locator).innerHTML()).toContain(name);
-//   }
   
   module.exports = {
     assertURL,
