@@ -1,8 +1,8 @@
 const { test, expect } = require('@playwright/test');
 import { buttonsData, hamburgerMenu, getItems, getPrices, productsData, pageData } from '../pom/inventorypage.js';
 import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
-import { assertURL } from '../pom/cartpage.js';
-import { prependListener } from 'process';
+import { assertURL, clickElement } from '../pom/cartpage.js';
+import { checkSortEnabled } from '../pom/inventorypage.js';
 // @ts-check
 
 test.beforeEach(async ({ page }) => {
@@ -10,28 +10,27 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Product sort list unfolds when user clicks unfold button', async ({page}) => {
-    await expect(page.locator(buttonsData.productSort)).toBeVisible();
-    await page.locator(buttonsData.productSort).click();
-
+    await expect(page.locator(buttonsData.filterSort)).toBeVisible();
+    await clickElement(page, buttonsData.filterSort);
 });
 
 test('Product sort list contains (A to Z) choice', async ({page}) => {
-    await page.locator(buttonsData.productSort).click();
+    await page.locator(buttonsData.filterSort).click();
     await expect(page.getByRole('option', {name : 'Name (A to Z)'})).toBeEnabled();
 });
 
 test('Product sort list contains (Z to A) choice', async ({page}) => {
-    await page.locator(buttonsData.productSort).click();
+    await page.locator(buttonsData.filterSort).click();
     await expect(page.getByRole('option', {name : 'Name (Z to A)'})).toBeEnabled();
 });
 
 test('Product sort list contains (low to high) choice', async ({page}) => {
-    await page.locator(buttonsData.productSort).click();
+    await page.locator(buttonsData.filterSort).click();
     await expect(page.getByRole('option', {name : 'Price (low to high)'})).toBeEnabled();
 });
 
 test('Product sort list contains (high to low) choice', async ({page}) => {
-    await page.locator(buttonsData.productSort).click();
+    await page.locator(buttonsData.filterSort).click();
     await expect(page.getByRole('option', {name : 'Price (high to low)'})).toBeEnabled();
 });
 
@@ -46,8 +45,8 @@ test('Sort list changes applicable for (A to Z)', async ({page}) => {
 });
  
 test('Sort list changes applicable for (Z to A)', async ({page}) => {
-    await page.locator(buttonsData.productSort).click();
-    await page.locator(buttonsData.productSort).selectOption('Name (Z to A)');
+    await clickElement(page, buttonsData.filterSort);
+    await page.locator(buttonsData.filterSort).selectOption('Name (Z to A)');
  
     let inventoryContainer =  await getItems(page, '.inventory_item');
     let sortedItems = [...inventoryContainer].sort().reverse();
@@ -55,8 +54,8 @@ test('Sort list changes applicable for (Z to A)', async ({page}) => {
 });
  
 test('Sort list changes applicable for (low to high)', async ({page}) => { 
-    await page.locator(buttonsData.productSort).click();
-    await page.locator(buttonsData.productSort).selectOption('Price (low to high)');
+    await clickElement(page, buttonsData.filterSort);
+    await page.locator(buttonsData.filterSort).selectOption('Price (low to high)');
  
     let items =  await getPrices(page, '.inventory_item_price');
     let inventoryContainer = items.map(function(str) { return parseFloat(str); });
@@ -65,8 +64,8 @@ test('Sort list changes applicable for (low to high)', async ({page}) => {
 });
 
 test('Sort list changes applicable for (high to low)', async ({page}) => { 
-     await page.locator(buttonsData.productSort).click();
-     await page.locator(buttonsData.productSort).selectOption('Price (high to low)');
+    await clickElement(page, buttonsData.filterSort);
+     await page.locator(buttonsData.filterSort).selectOption('Price (high to low)');
  
      let items =  await getPrices(page, '.inventory_item_price');
      let inventoryContainer = items.map(function(str) { return parseFloat(str); });
@@ -82,7 +81,7 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
         });
         await expect(isHamburgerMenuHidden).toEqual(false);
         await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
-    });
+});
 
 test('Hamburger menu closes when user clicks exit', async ({page}) => {
     await page.locator(hamburgerMenu.menuButton).click();
@@ -136,5 +135,3 @@ test('Remove button deletes item from shopping cart', async ({ page }) => {
     await page.locator(buttonsData.removeButton).click();
     expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
 }); 
-
-

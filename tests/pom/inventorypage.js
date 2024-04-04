@@ -12,6 +12,7 @@ export class hamburgerMenu {
 }
 
 export class buttonsData {
+    static filterSort = 'select.product_sort_container'
     static defaultSort= 'span.active_option:has-text("Name (A to Z)")' 
     static productSort= '[data-test=product_sort_container]'
     static addedToCart= 'span.shopping_cart_badge'
@@ -39,9 +40,17 @@ async function getPrices(page, locator){
     return (await page.$$eval(locator, (elements) => elements.map((element) => element.textContent.trim().slice(1))));
 }
 
+async function checkSortEnabled(page, optionName) {
+    const selector = `option[name="${optionName}"]`;
+    await page.waitForSelector(selector);
+    const option = await page.$(selector);
+    await expect(option).toBeEnabled();
+}
+
 module.exports = {
     getItems,
     getPrices,
+    checkSortEnabled,
     hamburgerMenu,
     buttonsData,
     productsData,

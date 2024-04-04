@@ -28,15 +28,26 @@ export class cartMenu {
   }
 
 //Actions
-export async function assertURL(page, url, locator = null, name = '') {
+async function assertURL(page, url, locator = null, name = '') {
   await expect(page).toHaveURL(url);
   if (locator) {
       expect(await page.locator(locator).innerHTML()).toContain(name);
   }
 }
+
+async function clickElement(page, locator) {
+  await page.locator(locator).click();
+}
   
+async function checkElementIsEnabled(page, locator) {
+  const element = await page.locator(locator);
+  await expect(element).toBeEnabled();
+}
+
   module.exports = {
     assertURL,
+    clickElement,
+    checkElementIsEnabled,
     cartData,
     cartMenu,
   };
