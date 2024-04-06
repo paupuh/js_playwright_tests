@@ -11,4 +11,3 @@ test('User is able open page', async ({page}) => {
     await expect(page).toHaveTitle(`Swag Labs`);
 })
 
-

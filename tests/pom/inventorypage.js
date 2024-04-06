@@ -12,19 +12,19 @@ export class hamburgerMenu {
 }
 
 export class buttonsData {
-    static filterSort = 'select.product_sort_container'
-    static defaultSort= 'span.active_option:has-text("Name (A to Z)")' 
-    static productSort= '[data-test=product_sort_container]'
     static addedToCart= 'span.shopping_cart_badge'
-    static shoppingCart= 'a.shopping_cart_link'
     static addToCart = 'button.btn.btn_primary.btn_small.btn_inventory:nth-of-type'
+    static defaultSort= 'span.active_option:has-text("Name (A to Z)")' 
+    static filterSort = 'select.product_sort_container'
+    static productSort= '[data-test=product_sort_container]'
     static removeButton= 'button.btn.btn_secondary.btn_small.cart_button[data-test^="remove-"]'
+    static shoppingCart= 'a.shopping_cart_link'
 }
 
 export class productsData {
-    static productContainer= '#inventory_container.inventory_container'
-    static inventoryUrl= 'https://www.saucedemo.com/inventory.html'
     static aboutUrl= 'https://saucelabs.com/'
+    static inventoryUrl= 'https://www.saucedemo.com/inventory.html'
+    static productContainer= '#inventory_container.inventory_container'
 }
 
 export class pageData {
@@ -32,25 +32,32 @@ export class pageData {
 }
 
 //Actions
-async function getItems(page, locator){
+export async function getItems(page, locator){
     return (await page.$$eval(locator, (elements) => elements.map((element) => element.textContent.trim())));
 }
 
-async function getPrices(page, locator){
+export async function getPrices(page, locator){
     return (await page.$$eval(locator, (elements) => elements.map((element) => element.textContent.trim().slice(1))));
 }
 
-async function checkSortEnabled(page, optionName) {
-    const selector = `option[name="${optionName}"]`;
-    await page.waitForSelector(selector);
-    const option = await page.$(selector);
-    await expect(option).toBeEnabled();
+export async function checkVisibility(page, locator) {
+    const element = await page.locator(locator);
+    expect(await element).toBeVisible();
 }
 
+export async function openHamburgerMenu(page){
+    await page.locator(hamburgerMenu.menuButton).click();
+}
+
+export async function selectChoice(page, locator, option){
+    await page.locator(locator).selectOption(option);
+}
 module.exports = {
     getItems,
     getPrices,
-    checkSortEnabled,
+    checkVisibility,
+    openHamburgerMenu,
+    selectChoice,
     hamburgerMenu,
     buttonsData,
     productsData,

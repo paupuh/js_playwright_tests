@@ -25,29 +25,35 @@ export class cartData {
 
 export class cartMenu {
     static removeFromCart= 'button.btn.btn_secondary.btn_small.btn_inventory:has-text("Remove")'
-  }
+}
 
 //Actions
-async function assertURL(page, url, locator = null, name = '') {
+export async function assertURL(page, url, locator = null, name = '') {
   await expect(page).toHaveURL(url);
   if (locator) {
       expect(await page.locator(locator).innerHTML()).toContain(name);
   }
 }
 
-async function clickElement(page, locator) {
+export async function clickElement(page, locator) {
   await page.locator(locator).click();
 }
   
-async function checkElementIsEnabled(page, locator) {
+export async function checkElementIsEnabled(page, locator){
   const element = await page.locator(locator);
-  await expect(element).toBeEnabled();
+  expect(await element).toBeEnabled();
 }
+
+export async function fillForm(page, locator, data) {
+  await page.locator(locator).fill(data);
+}
+
 
   module.exports = {
     assertURL,
     clickElement,
     checkElementIsEnabled,
+    fillForm,
     cartData,
     cartMenu,
   };
