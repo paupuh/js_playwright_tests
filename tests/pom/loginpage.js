@@ -28,14 +28,11 @@ export async function isUserLoggedIn(page) {
   
 export async function isProductAddedToCart(page) {
     await isUserLoggedIn(page);
-    let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 element matching (from list)
-
-  if (addToCartButton) {  // making sure that `addToCartButton` was found before click
-      await addToCartButton.click();
-      expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1'); } 
-      else {
-      console.error('Test failed- Button "Add to cart" not found.');  // Dodaj odpowiednią obsługę błędów, jeśli potrzebujesz
-  }
+    let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`); // $ returning 1 matching element (from list)
+    expect(addToCartButton).not.toEqual(undefined)
+    await addToCartButton.click();
+    expect(await page.locator(buttonsData.addedToCart).textContent()).toEqual('1'); 
+      // console.error('Test failed- Button "Add to cart" not found.');  // bug support, add when needed
   }
   
 module.exports = {

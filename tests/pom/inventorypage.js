@@ -1,3 +1,6 @@
+import { format } from 'path';
+import { clickElement } from './cartpage';
+
 const { expect } = require('@playwright/test');
 
 //Locators
@@ -52,7 +55,17 @@ export async function openHamburgerMenu(page){
 export async function selectChoice(page, locator, option){
     await page.locator(locator).selectOption(option);
 }
+
+export async function basketIsEmpty(page){
+        await clickElement(page, buttonsData.removeButton);
+        await page.waitForSelector(buttonsData.shoppingCart, { state: 'attached' }); // Oczekiwanie na załadowanie się koszyka
+        expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
+}
+
+
+
 module.exports = {
+    basketIsEmpty,
     getItems,
     getPrices,
     checkVisibility,

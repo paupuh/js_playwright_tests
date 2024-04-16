@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:cart": "npm run test e2e/cart.test.js",
+    "test:login": "npm run test e2e/login.test.js",
+    "test:inventory": "npm run test e2e/inventory.js",
+    "test:cart:headed": "npm run test e2e/cart.test.js -- --headed",
+    "test:login:headed": "npm run test e2e/login.test.js --headed",
+    "test:inventory:headed": "npm run test e2e/inventory.js --headed"
   },
   "keywords": [],
   "author": "",

@@ -23,12 +23,12 @@ export class cartData {
   static zipData= '71-472'
 }
 
-export class cartMenu {
-    static removeFromCart= 'button.btn.btn_secondary.btn_small.btn_inventory:has-text("Remove")'
-}
+// export class cartMenu {
+//     // static removeFromCartButton= 'button.btn.btn_secondary.btn_small.btn_inventory:has-text("Remove")'
+// }
 
 //Actions
-export async function assertURL(page, url, locator = null, name = '') {
+export async function confirmURL(page, url, locator = null, name = '') {
   await expect(page).toHaveURL(url);
   if (locator) {
       expect(await page.locator(locator).innerHTML()).toContain(name);
@@ -48,12 +48,24 @@ export async function fillForm(page, locator, data) {
   await page.locator(locator).fill(data);
 }
 
+async function compareQuantity(page, url, selector) {
+  await page.goto(url);
+  const currentQuantity = await page.evaluate(selector => {
+      const element = document.querySelector(selector);
+      return element ? element.textContent : null;
+  }, selector);
+  return currentQuantity;
+}
+
+
+
 
   module.exports = {
-    assertURL,
+    compareQuantity,
+    confirmURL,
     clickElement,
     checkElementIsEnabled,
     fillForm,
     cartData,
-    cartMenu,
+    // cartMenu,
   };

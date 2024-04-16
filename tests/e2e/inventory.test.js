@@ -1,7 +1,8 @@
 const { test, expect } = require('@playwright/test');
-import { buttonsData, hamburgerMenu, getItems, getPrices, productsData, pageData, checkVisibility, openHamburgerMenu, selectChoice } from '../pom/inventorypage.js';
+import { buttonsData, hamburgerMenu, getItems, getPrices, productsData, pageData, basketIsEmpty, checkVisibility, openHamburgerMenu, selectChoice } from '../pom/inventorypage.js';
 import { isUserLoggedIn, isProductAddedToCart,loginData } from '../pom/loginpage.js';
-import { assertURL, clickElement } from '../pom/cartpage.js';
+import { confirmURL, clickElement } from '../pom/cartpage.js';
+
 // @ts-check
 
 test.beforeEach(async ({ page }) => {
@@ -38,8 +39,8 @@ test('Product sort list default A-Z selected', async ({page}) => {
 });
 
 test('Sort list changes applicable for (A to Z)', async ({page}) => {
-    let items =  await getItems(page, '.inventory_item');
-    let sortedItems = [...items].sort();
+    let items = await getItems(page, '.inventory_item');
+    let sortedItems = [...items].sort(); // "..." this is copying all of the elements of items array
     expect(items).toEqual(sortedItems);
 });
  
@@ -48,7 +49,8 @@ test('Sort list changes applicable for (Z to A)', async ({page}) => {
     await selectChoice(page, buttonsData.filterSort, 'Name (Z to A)');
  
     let inventoryContainer =  await getItems(page, '.inventory_item');
-    let sortedItems = [...inventoryContainer].sort().reverse();
+    let sortedItems = [...inventoryContainer].sort().reverse(); // inventory container , 
+    //sort is sorting alphabetically and reverse is turing array from z to a
     expect(inventoryContainer).toEqual(sortedItems);
 });
  
@@ -58,6 +60,7 @@ test('Sort list changes applicable for (low to high)', async ({page}) => {
  
     let items =  await getPrices(page, '.inventory_item_price');
     let inventoryContainer = items.map(function(str) { return parseFloat(str); });
+    // operation on every element of the table 
     let sortedItems = [...inventoryContainer.sort((a,b) => {a-b})];
     expect(inventoryContainer).toEqual(sortedItems);
 });
@@ -78,7 +81,7 @@ test('Hamburger menu opens when user clicks it', async ({page}) => {
             return !menu.getAttribute('aria-hidden') === 'false';
         });
         await expect(isHamburgerMenuHidden).toEqual(false);
-        await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
+        await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test('Hamburger menu closes when user clicks exit', async ({page}) => {
@@ -88,20 +91,20 @@ test('Hamburger menu closes when user clicks exit', async ({page}) => {
     let visibility = await page.locator("div.bm-menu-wrap").getAttribute('aria-hidden');
     console.log(visibility) // getting out value of above attributte and write it
     await expect(visibility).toEqual('true');
-    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
+    await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test ('Hamburger menu- All items opens, when user selects it', async ({page}) => {   
     await openHamburgerMenu(page);
     await clickElement(page, hamburgerMenu.allItems);
 
-    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
+    await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test ('Hamburger menu- About opens, when user selects it', async ({page}) => {
     await openHamburgerMenu(page);
     await clickElement(page, hamburgerMenu.aboutOpen);
-    await assertURL(page, productsData.aboutUrl);
+    await confirmURL(page, productsData.aboutUrl);
 });
 
 test ('Hamburger menu- Resets app state, when user selects it', async ({page}) => { 
@@ -118,7 +121,7 @@ test ('Hamburger menu- Logout, logging out user, when user selects it', async ({
     await openHamburgerMenu(page);
     await clickElement(page, hamburgerMenu.logOut);
 
-    await assertURL(page, loginData.homeURL);
+    await confirmURL(page, loginData.homeURL);
     await expect(page).toHaveTitle('Swag Labs')  
 });
 
@@ -130,7 +133,6 @@ test('Remove button deletes item from shopping cart', async ({ page }) => {
     let addToCartButton = await page.$(`${buttonsData.addToCart}(${1})`);
     await addToCartButton.click();
     await clickElement(page, buttonsData.shoppingCart);
-    await clickElement(page, buttonsData.removeButton);
 
-    expect(await page.locator(buttonsData.shoppingCart).innerHTML()).toEqual('');
+    await basketIsEmpty(page);
 }); 

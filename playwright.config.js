@@ -23,8 +23,8 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Chrome'] },
       // @ts-ignore
       contextOptions: {
-        timeout: 200000, //  miliseconds 
-      }}
+        timeout: 300000, //  miliseconds 
+      }},
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },

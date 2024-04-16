@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 import { buttonsData, pageData, productsData } from '../pom/inventorypage.js';
 import { isUserLoggedIn, isProductAddedToCart } from '../pom/loginpage.js';
-import { assertURL, cartData, checkElementIsEnabled, clickElement, fillForm, FillForm } from '../pom/cartpage.js';
+import { confirmURL, cartData, checkElementIsEnabled, clickElement, fillForm, compareQuantity } from '../pom/cartpage.js';
 // @ts-check
 
 test.beforeEach(async ({ page }) => {
@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 test ('Cart opens when user clicks shopping cart icon', async ({page}) => {      
     await clickElement(page, buttonsData.shoppingCart)
 
-    await assertURL(page, cartData.cartUrl, pageData.pageTitle, 'Your Cart');
+    await confirmURL(page, cartData.cartUrl, pageData.pageTitle, 'Your Cart');
 });
 
 test ('When shopping cart contains at least 1 product all buttons enabled and directs to correct links', async ({page}) => {
@@ -20,12 +20,12 @@ test ('When shopping cart contains at least 1 product all buttons enabled and di
     await clickElement(page, buttonsData.shoppingCart);
     await checkElementIsEnabled(page, cartData.continueShpButton);
     await clickElement(page, cartData.continueShpButton);
-    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
+    await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 
     await clickElement(page, buttonsData.shoppingCart);
     await checkElementIsEnabled(page, cartData.checkoutButton);
     await clickElement(page, cartData.checkoutButton);
-    await assertURL(page, cartData.checkoutUrl, pageData.pageTitle, 'Checkout: Your Information');
+    await confirmURL(page, cartData.checkoutUrl, pageData.pageTitle, 'Checkout: Your Information');
 });   
 
 // BUG - TEST FAILED, reported in jira <jira link>. Remove skip when fixed
@@ -33,14 +33,14 @@ test.skip('When shopping cart is empty, checkout button is disabled', async ({ p
     await clickElement(page, buttonsData.shoppingCart);
 
     await clickElement(page, cartData.checkoutButton);
-    await assertURL(page, cartData.checkoutUrl, pageData.pageTitle, 'Checkout: Your Information');
+    await confirmURL(page, cartData.checkoutUrl, pageData.pageTitle, 'Checkout: Your Information');
   });
   
 test ('When shopping cart is empty, continue shopping button is enabled and directs to corret tab', async ({page}) => {
     await clickElement(page, buttonsData.shoppingCart);
 
     await clickElement(page, cartData.continueShpButton);
-    await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
+    await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');
 });
 
 test ('When the shopping cart contains at least one product, the user is directed to the checkout', async ({page}) => {
@@ -48,12 +48,14 @@ test ('When the shopping cart contains at least one product, the user is directe
     await clickElement(page, buttonsData.shoppingCart);
 
     await clickElement(page, cartData.checkoutButton);
-    await checkElementIsEnabled(page, cartData.placeholderFirstName);
-    await checkElementIsEnabled(page, cartData.placeholderLastName);
-    await checkElementIsEnabled(page, cartData.placeholderZipCpde);
-    await checkElementIsEnabled(page, cartData.cancelButton);
-    await checkElementIsEnabled(page, cartData.continueButton);
+    await checkElementIsEnabled(page, 
+        cartData.placeholderFirstName, 
+        cartData.placeholderLastName, 
+        cartData.placeholderZipCpde, 
+        cartData.cancelButton, 
+        cartData.continueButton);
 });
+
 
 test ('When user is in checkout tab can finish shopping process', async ({page}) => {
     await isProductAddedToCart(page);
@@ -66,19 +68,17 @@ test ('When user is in checkout tab can finish shopping process', async ({page})
     await fillForm(page, cartData.placeholderZipCpde, cartData.zipData)
 
     await clickElement(page, cartData.continueButton);
-    await assertURL(page, cartData.checkoutUrl2, pageData.pageTitle, 'Checkout: Overview');     
+    await confirmURL(page, cartData.checkoutUrl2, pageData.pageTitle, 'Checkout: Overview');     
 
-        await page.goto(cartData.cartUrl);
-        const cartValue = await page.$eval('div.cart_quantity', element => element.textContent);
-        await page.goto(cartData.checkoutUrl2);
-        const checkoutValue = await page.$eval('div.cart_quantity', element => element.textContent);
-        expect(cartValue).toEqual(checkoutValue);   // Comparing cart quantity 
-
+    const cartValue = await compareQuantity(page, cartData.cartUrl, 'div.cart_quantity');
+    const checkoutValue = await compareQuantity(page, cartData.checkoutUrl2, 'div.cart_quantity');
+    expect(cartValue).toEqual(checkoutValue);
+        
         await clickElement(page, cartData.finishButton);
-        await assertURL(page, cartData.checkoutCompleteUrl, pageData.pageTitle, 'Checkout: Complete!');     
+        await confirmURL(page, cartData.checkoutCompleteUrl, pageData.pageTitle, 'Checkout: Complete!');     
 
         await clickElement(page, cartData.backHomeBtn)
-        await assertURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');     
+        await confirmURL(page, productsData.inventoryUrl, pageData.pageTitle, 'Products');     
 });
 
 // #add test proving that user has to fiilin all of the fields, if not there is an error and user can't go to the next step
@@ -87,8 +87,7 @@ test ('User directed back to cart when checkout cancelled', async ({page}) => {
     await isProductAddedToCart(page);
 
     await clickElement(page, buttonsData.shoppingCart);
-
     await clickElement(page, cartData.checkoutButton)
     await clickElement(page, cartData.cancelButton);
-    await assertURL(page, cartData.cartUrl, pageData.pageTitle, 'Your Cart');     
+    await confirmURL(page, cartData.cartUrl, pageData.pageTitle, 'Your Cart');     
 });
