@@ -57,8 +57,10 @@ async function compareQuantity(page, url, selector) {
   return currentQuantity;
 }
 
+export async function takeFinalScreenshot(page, name) {
+  await page.screenshot({ path: `screenshots/${name}.png` });
 
-
+}
 
   module.exports = {
     compareQuantity,
@@ -66,6 +68,6 @@ async function compareQuantity(page, url, selector) {
     clickElement,
     checkElementIsEnabled,
     fillForm,
+    takeFinalScreenshot,
     cartData,
-    // cartMenu,
   };
