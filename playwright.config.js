@@ -1,6 +1,18 @@
-// @ts-check
-const { defineConfig, devices } = require('@playwright/test');
+const { defineConfig, devices } = require('@playwright/test')
 
+const commonContextOptions = {
+  timeout: 500000 // milliseconds
+}
+
+module.exports = defineConfig({
+  reporter: [['html', { open: 'on-failure' }]]
+})
+
+export default defineConfig({
+  fullyParallel: true
+})
+
+// @ ts-check
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -14,17 +26,15 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'functional',
-      testMatch: ['<rootDir>/tests/functional/*.spec.js'],
+      testMatch: ['<rootDir>/tests/functional/*.spec.js']
       // inne opcje konfiguracji dla testów funkcjonalnych
     },
     /* Configure projects for major browsers */
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-      // @ts-ignore
-      contextOptions: {
-        timeout: 300000, //  miliseconds 
-      }},
+    // {
+    //   name: 'chromium',
+    //   use: { ...devices['Desktop Chrome'] },
+    //   // @ts-ignore
+    // },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
@@ -38,10 +48,10 @@ module.exports = defineConfig({
     //   name: 'Mobile Chrome',
     //   use: { ...devices['Pixel 5'] },
     // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
+    {
+      name: 'SafariPhone12',
+      use: { ...devices['iPhone 12'] }
+    }
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',
@@ -51,7 +61,7 @@ module.exports = defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-    ],
+  ],
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -67,12 +77,12 @@ module.exports = defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: `https://www.saucedemo.com/`,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
+    trace: 'on-first-retry'
+  }
   /* Run your local dev server before starting the tests */
   // webServer: {
   //   command: 'npm run start',
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-});
+})
