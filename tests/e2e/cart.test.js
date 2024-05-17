@@ -16,6 +16,10 @@ test.beforeEach(async ({ page }) => {
   await isUserLoggedIn(page)
 })
 
+test.afterEach(async ({ page }) => {
+    await page.close();
+})
+
 test('Cart opens when user clicks shopping cart icon', async ({ page }) => {
   await clickElement(page, buttonsData.shoppingCart)
 

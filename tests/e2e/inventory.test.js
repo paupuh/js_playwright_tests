@@ -28,6 +28,10 @@ test.beforeEach(async ({ page }) => {
   await isUserLoggedIn(page)
 })
 
+test.afterEach(async ({ page }) => {
+    await page.close();
+})
+
 test('Product sort list unfolds when user clicks unfold button', async ({
   page
 }) => {

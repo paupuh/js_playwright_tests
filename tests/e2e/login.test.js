@@ -8,6 +8,10 @@ test.beforeEach(async ({ page }) => {
   await takeFinalScreenshot(page, 'User.loggedin')
 })
 
+test.afterEach(async ({ page }) => {
+  await page.close();
+})
+
 test('User is able open page', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle(`Swag Labs`)
